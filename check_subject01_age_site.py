@@ -8,7 +8,7 @@ def check_data(file_path):
     df = pd.read_csv(file_path)
 
     # Step 2: Sort by src_subject_id, then interview_date in ascending order
-    df['interview_date'] = pd.to_datetime(df['interview_date'], format='%m/%d/%y')
+    df['interview_date'] = pd.to_datetime(df['interview_date'], format='%m/%d/%Y')
     df = df.sort_values(by=['src_subject_id', 'interview_date'])
 
     current_row = df.iloc[0]
@@ -40,6 +40,11 @@ def check_data(file_path):
         # Check if site starts with the same character as the previous row's site
         if current_row['site'] != previous_row['site']:
             print(f"Error in row {i}: site {current_row['site']} does not match previous row {previous_row['site']} for src_subject_id {current_row['src_subject_id']}")
+
+        # Check that session date is not the same as the previous row's session date
+        if current_row['interview_date'] == previous_row['interview_date']:
+            print(f"Error in row {i}: interview_date {current_row['interview_date']} is the same as previous row's {previous_row['interview_date']} for src_subject_id {current_row['src_subject_id']}")
+
 
     # write the corrected DataFrame to a new CSV file
     corrected_csv_file_path = file_path.replace(".csv", "_corrected.csv")
